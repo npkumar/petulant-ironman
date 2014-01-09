@@ -46,6 +46,13 @@ public class TagCloudElementImpl implements TagCloudElement {
 	public void setTagText(String tagText) {
 		this.tagText = tagText;
 	}
+
+	@Override
+	public String toString() {
+		return "TagCloudElementImpl [fontSize=" + fontSize + ", weight="
+				+ weight + ", tagText=" + tagText + "]";
+	}
+	
 	
 	
 

@@ -24,6 +24,7 @@ public class HTMLTagCloudDecorator implements VisualTagCloudDecorator {
         fontMap.put("font-size: 0", "font-size: 13px");
         fontMap.put("font-size: 1", "font-size: 20px");
         fontMap.put("font-size: 2", "font-size: 24px");
+        fontMap.put("font-size: 3", "font-size: 30px");
     }
     
     public String decorateTagCloud(TagCloud tagCloud) {

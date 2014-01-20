@@ -22,10 +22,9 @@ public class TagCloudTest extends TestCase {
 
 	public void testTagCloud() {
 
-		String first = "binary";
 		int numSizes = 4;
 		String fontPrefix = "font-size: ";
-		String outputFile ="tagcloud.html";
+		String outputFile = "tagcloud.html";
 
 		List<TagCloudElement> list = new ArrayList<TagCloudElement>();
 		list.add(new TagCloudElementImpl("tagging", 1));
@@ -53,15 +52,15 @@ public class TagCloudTest extends TestCase {
 			PrintWriter w = new PrintWriter(new File(outputFile));
 			VisualTagCloudDecorator deco = new HTMLTagCloudDecorator();
 			System.out.println(cloud);
-			
+
 			w.write(deco.decorateTagCloud(cloud));
 			w.flush();
 			w.close();
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 }

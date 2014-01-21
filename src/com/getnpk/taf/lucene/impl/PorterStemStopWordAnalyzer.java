@@ -18,9 +18,9 @@ import org.apache.lucene.analysis.Token;
 
 public class PorterStemStopWordAnalyzer extends Analyzer {
 
-	private static final String[] stopWords = { "be", "in", "and", "of", "to",
+	public static final String[] stopWords = { "be", "in", "and", "of", "to",
 			"the", "that", "then", "there", "if", "was", "am", "all", "is",
-			"this", "other" };
+			"this", "other", "there"};
 
 	private Set<String> stopSet;
 

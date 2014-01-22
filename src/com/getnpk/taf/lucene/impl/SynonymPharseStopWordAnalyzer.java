@@ -21,8 +21,7 @@ public class SynonymPharseStopWordAnalyzer extends Analyzer {
 	private PharseCache pCache;
 	private SynonymsCache sCache;
 
-	public SynonymPharseStopWordAnalyzer(SynonymsCache sCache,
-			PharseCache pCache) {
+	public SynonymPharseStopWordAnalyzer(SynonymsCache sCache, PharseCache pCache) {
 		this.pCache = pCache;
 		this.sCache = sCache;
 	}

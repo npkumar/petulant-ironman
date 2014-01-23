@@ -1,12 +1,16 @@
 package com.getnpk.taf.termvector.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.getnpk.taf.lucene.impl.TagCacheImpl;
 import com.getnpk.taf.textanalysis.Tag;
+import com.getnpk.taf.textanalysis.TagCache;
 import com.getnpk.taf.textanalysis.TagMagnitude;
 import com.getnpk.taf.textanalysis.TagMagnitudeVector;
 
@@ -51,14 +55,20 @@ public class TagMagnitudeVectorImpl implements TagMagnitudeVector {
 		return Math.sqrt(m1 * m1 + m2 * m2);
 	}
 
+	/**
+	 * Returns sorted by tag magnitudes.
+	 * */
 	@Override
 	public List<TagMagnitude> getTagMagnitudes() {
-		return this.getTagMagnitudes();
+		List<TagMagnitude> sorted = new ArrayList<TagMagnitude>();
+		sorted.addAll(this.tagMagnitudeMap.values());
+		Collections.sort(sorted);
+		return sorted;
 	}
 
 	@Override
 	public Map<Tag, TagMagnitude> getTagMagnitudeMap() {
-		return this.getTagMagnitudeMap();
+		return this.tagMagnitudeMap;
 	}
 
 	/**
@@ -146,6 +156,36 @@ public class TagMagnitudeVectorImpl implements TagMagnitudeVector {
 		return new TagMagnitudeVectorImpl(newList);
 	}
 
-	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		List<TagMagnitude> sorted = this.getTagMagnitudes();
+		
+		double sumSquared = 0.0;
+		
+		for (TagMagnitude tm: sorted){
+			sb.append(tm);
+			sumSquared = Math.pow(tm.getMagnitude(), 2);
+		}
+		
+		sb.append("Sum Squared = " + sumSquared);
+		
+		return sb.toString();
+	}
+
+
+	public static void main(String args[]) throws IOException{
+		TagCache tagCache = new TagCacheImpl();
+		List<TagMagnitude> tmList = new ArrayList<TagMagnitude>();
+		
+		tmList.add(new TagMagnitudeImpl(tagCache.getTag("monkey"), 2.0));
+		tmList.add(new TagMagnitudeImpl(tagCache.getTag("de"), 5.0));
+		tmList.add(new TagMagnitudeImpl(tagCache.getTag("luffy"), 7.0));
+		tmList.add(new TagMagnitudeImpl(tagCache.getTag("pokemon"), 3.3));
+		
+		TagMagnitudeVectorImpl vector = new TagMagnitudeVectorImpl(tmList);
+		
+		System.out.println(vector);
+	}
 
 }

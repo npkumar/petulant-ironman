@@ -19,7 +19,7 @@ public class TagCacheImpl extends CacheImpl implements TagCache {
 	@Override
 	public Tag getTag(String text) throws IOException {
 		Tag tag = this.tagMap.get(text);
-		if(null == tag){
+		if(tag == null){
 			String stemmedText = this.getStemmedText(text);
 			tag = new TagImpl(text, stemmedText);
 			//insert stemmed text

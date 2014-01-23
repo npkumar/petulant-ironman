@@ -18,12 +18,12 @@ public class TagImpl implements Tag {
 	
 	@Override
 	public String getDisplayText() {
-		return null;
+		return this.displayText;
 	}
 
 	@Override
 	public String getStemmedText() {
-		return null;
+		return this.stemmedText;
 	}
 
 	

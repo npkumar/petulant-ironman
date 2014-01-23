@@ -14,4 +14,5 @@ public interface TagMagnitudeVector {
 	public double dotProduct(TagMagnitudeVector o);
 	public TagMagnitudeVector add(TagMagnitudeVector o);
 	public TagMagnitudeVector add(Collection<TagMagnitudeVector> tmvList);
+	
 }

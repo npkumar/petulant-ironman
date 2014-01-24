@@ -1,6 +1,9 @@
 package com.getnpk.taf.lucene.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -12,6 +15,12 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
 
+import com.getnpk.taf.tagcloud.TagCloud;
+import com.getnpk.taf.tagcloud.TagCloudElement;
+import com.getnpk.taf.tagcloud.impl.HTMLTagCloudDecorator;
+import com.getnpk.taf.tagcloud.impl.LinearFontSizeComputationStrategy;
+import com.getnpk.taf.tagcloud.impl.TagCloudElementImpl;
+import com.getnpk.taf.tagcloud.impl.TagCloudImpl;
 import com.getnpk.taf.termvector.impl.TagMagnitudeImpl;
 import com.getnpk.taf.termvector.impl.TagMagnitudeVectorImpl;
 import com.getnpk.taf.textanalysis.Document;
@@ -108,7 +117,31 @@ public class LuceneTextAnalyser implements TextAnalyzer {
 		return tags;
 	}
 	
+	private TagCloud createTagCloud(TagMagnitudeVector vector){
+		List<TagCloudElement> eles = new ArrayList<TagCloudElement>();
+		for (TagMagnitude tm: vector.getTagMagnitudes()){
+			TagCloudElement ele = new TagCloudElementImpl(tm.getDisplayText(), tm.getMagnitude());
+			eles.add(ele);
+		}
+		return new TagCloudImpl(eles, new LinearFontSizeComputationStrategy(3, "font-size: "));
+	}
 	
+	private String visualizeTagCloud(TagCloud cloud){
+		HTMLTagCloudDecorator deco = new HTMLTagCloudDecorator();
+		String html = deco.decorateTagCloud(cloud);
+		return html;
+	}
+	
+	public void dumpVisualization(TagMagnitudeVector vector){
+		try {
+			PrintWriter w = new PrintWriter(new File("visual.html"));
+			w.write(visualizeTagCloud(createTagCloud(vector)));
+			w.flush();
+			w.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 	public static void main(String[] args) throws IOException{
 		String text1 = "Administration of R&D policies, artificial intelligence and related funds, intended to increase personal well-being, related to basic research "
 				+ "Regulation of the activities of agencies that provide health care, education, cultural services and other social services, excluding social security";
@@ -132,8 +165,7 @@ public class LuceneTextAnalyser implements TextAnalyzer {
 		LuceneTextAnalyser lta2 = new LuceneTextAnalyser(new TagCacheImpl(), new DocInverseDocFrequency(docs));
 		
 		System.out.println(lta2.createTagMagnitudeVector(text2));
-		
-		
+		lta2.dumpVisualization(lta2.createTagMagnitudeVector(text2));
 	}
 
 }

@@ -14,6 +14,7 @@ import org.apache.lucene.analysis.TokenStream;
 
 import com.getnpk.taf.termvector.impl.TagMagnitudeImpl;
 import com.getnpk.taf.termvector.impl.TagMagnitudeVectorImpl;
+import com.getnpk.taf.textanalysis.Document;
 import com.getnpk.taf.textanalysis.InverseDocFreqEstimator;
 import com.getnpk.taf.textanalysis.Tag;
 import com.getnpk.taf.textanalysis.TagCache;
@@ -30,6 +31,11 @@ public class LuceneTextAnalyser implements TextAnalyzer {
 	public LuceneTextAnalyser (TagCache tagCache, InverseDocFreqEstimator inverseDocFreqEstimator){
 		this.tagCache = tagCache;
 		this.inverseDocFreqEstimator = inverseDocFreqEstimator;
+	}
+	
+	
+	public LuceneTextAnalyser (TagCache tagCache){
+		this.tagCache = tagCache;
 	}
 	
 	@Override
@@ -95,20 +101,39 @@ public class LuceneTextAnalyser implements TextAnalyzer {
 	}
 	
 	
-	public void displayTextAnalysis(String text) throws IOException{
+	public List<Tag> displayTextAnalysis(String text) throws IOException{
 		List<Tag> tags = analyzeText(text);
-		for (Tag tag: tags)
-			System.out.println(tag);
+//		for (Tag tag: tags)
+//			System.out.println(tag);
+		return tags;
 	}
 	
 	
 	public static void main(String[] args) throws IOException{
-		String text = "Administration of R&D policies, artificial intelligence and related funds, intended to increase personal well-being, related to basic research "
+		String text1 = "Administration of R&D policies, artificial intelligence and related funds, intended to increase personal well-being, related to basic research "
 				+ "Regulation of the activities of agencies that provide health care, education, cultural services and other social services, excluding social security";
 		
-		LuceneTextAnalyser lta = new LuceneTextAnalyser(new TagCacheImpl(), new EqualInverseDocFreqEstimator());
+		String text2 = "Overall planning and statistical services and General (overall) public service activities "
+				+ "Regulation of the activities of agencies that provide health care";
+		
+	
+		LuceneTextAnalyser lta = new LuceneTextAnalyser(new TagCacheImpl());
 		System.out.println("Analyzing....");
-		lta.displayTextAnalysis(text);
+		List<Tag> one = lta.displayTextAnalysis(text1);
+		List<Tag> two = lta.displayTextAnalysis(text2);
+
+		Document doc1 = new DocumentImpl(one);
+		Document doc2 = new DocumentImpl(two);
+		
+		List<Document> docs = new ArrayList<Document>();
+		docs.add(doc1);
+		docs.add(doc2);
+		
+		LuceneTextAnalyser lta2 = new LuceneTextAnalyser(new TagCacheImpl(), new DocInverseDocFrequency(docs));
+		
+		System.out.println(lta2.createTagMagnitudeVector(text2));
+		
+		
 	}
 
 }

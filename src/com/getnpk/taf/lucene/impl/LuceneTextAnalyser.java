@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,20 +144,20 @@ public class LuceneTextAnalyser implements TextAnalyzer {
 		}
 	}
 	public static void main(String[] args) throws IOException{
-		String text1 = "Administration of R&D policies, artificial intelligence and related funds, intended to increase personal well-being, related to basic research "
+		String text11 = "Administration of R&D policies, artificial intelligence and related funds, intended to increase personal well-being, related to basic research "
 				+ "Regulation of the activities of agencies that provide health care, education, cultural services and other social services, excluding social security";
 		
-		String text2 = "Overall planning and statistical services and General (overall) public service activities "
+		String text21 = "Overall planning and statistical services and General (overall) public service activities "
 				+ "Regulation of the activities of agencies that provide health care";
 		
 	
 		LuceneTextAnalyser lta = new LuceneTextAnalyser(new TagCacheImpl());
 		System.out.println("Analyzing....");
-		List<Tag> one = lta.displayTextAnalysis(text1);
-		List<Tag> two = lta.displayTextAnalysis(text2);
+		List<Tag> one = lta.displayTextAnalysis(text11);
+		List<Tag> two = lta.displayTextAnalysis(text21);
 
-		Document doc1 = new DocumentImpl(one);
-		Document doc2 = new DocumentImpl(two);
+		Document doc1 = new DocumentImpl("one", text11, one);
+		Document doc2 = new DocumentImpl("two", text21, two);
 		
 		List<Document> docs = new ArrayList<Document>();
 		docs.add(doc1);
@@ -164,8 +165,20 @@ public class LuceneTextAnalyser implements TextAnalyzer {
 		
 		LuceneTextAnalyser lta2 = new LuceneTextAnalyser(new TagCacheImpl(), new DocInverseDocFrequency(docs));
 		
-		System.out.println(lta2.createTagMagnitudeVector(text2));
-		lta2.dumpVisualization(lta2.createTagMagnitudeVector(text2));
+		System.out.println(lta2.createTagMagnitudeVector(text11));
+		
+		TagMagnitudeVector vector = lta2.createTagMagnitudeVector(text11);
+		List<TagMagnitude> map = vector.getTagMagnitudes();
+		
+		int count = 0;
+		for (TagMagnitude tm : map){
+			System.out.println(tm.getDisplayText() + " " + tm.getMagnitude());
+			count++;
+			if (count > 9)
+				break;
+		}
+		
+		lta2.dumpVisualization(lta2.createTagMagnitudeVector(text11));
 	}
 
 }
